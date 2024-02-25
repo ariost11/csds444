@@ -67,6 +67,16 @@ class TrafficSimulation(tk.Tk):
         self.yellowEven.append(self.canvas.create_oval(x+25, y+3, x+45, y+22, fill='gray'))
         self.greenEven.append(self.canvas.create_oval(x+4, y+3, x+24, y+22, fill='gray'))
 
+
+        self.drawCarXRight(250, 380, 'blue')
+        self.drawCarXLeft(300, 310, 'yellow')
+        self.drawCarYDown(722, 600, 'orange')
+        self.drawCarYUp(790, 70, 'purple')
+
+        # 0 is for sideways, 1 is for up
+        self.drawPedestrian(300, 180, 0)
+        self.drawPedestrian(600, 600, 1)
+        
         self.after(self.greenRedTime, self.update_traffic_lights1)
 
     def update_traffic_lights1(self):
@@ -123,19 +133,193 @@ class TrafficSimulation(tk.Tk):
         
         self.after(self.greenRedTime, self.update_traffic_lights1)
 
-    def trafficLightBG(self, x1, y1, x2, y2, **kwargs):
+    def trafficLightBG(self, x1, y1, x2, y2):
         # Draw the main rectangle
         radius = 5
-        self.canvas.create_rectangle(x1 + radius, y1, x2 - radius, y2, fill='black', **kwargs)
-        self.canvas.create_rectangle(x1, y1 + radius, x2, y2 - radius, fill='black', **kwargs)
+        self.canvas.create_rectangle(x1 + radius, y1, x2 - radius, y2, fill='black')
+        self.canvas.create_rectangle(x1, y1 + radius, x2, y2 - radius, fill='black')
 
         # Draw the rounded corners
-        self.canvas.create_arc(x1, y1, x1 + 2 * radius, y1 + 2 * radius, start=90, extent=90, style=tk.PIESLICE, fill='black', **kwargs)
-        self.canvas.create_arc(x2 - 2 * radius, y1, x2, y1 + 2 * radius, start=0, extent=90, style=tk.PIESLICE, fill='black', **kwargs)
-        self.canvas.create_arc(x1, y2 - 2 * radius, x1 + 2 * radius, y2, start=180, extent=90, style=tk.PIESLICE, fill='black', **kwargs)
-        self.canvas.create_arc(x2 - 2 * radius, y2 - 2 * radius, x2, y2, start=270, extent=90, style=tk.PIESLICE, fill='black', **kwargs)
+        self.canvas.create_arc(x1, y1, x1 + 2 * radius, y1 + 2 * radius, start=90, extent=90, style=tk.PIESLICE, fill='black')
+        self.canvas.create_arc(x2 - 2 * radius, y1, x2, y1 + 2 * radius, start=0, extent=90, style=tk.PIESLICE, fill='black')
+        self.canvas.create_arc(x1, y2 - 2 * radius, x1 + 2 * radius, y2, start=180, extent=90, style=tk.PIESLICE, fill='black')
+        self.canvas.create_arc(x2 - 2 * radius, y2 - 2 * radius, x2, y2, start=270, extent=90, style=tk.PIESLICE, fill='black')
+
+    def drawCarXRight(self, x1, y1, color):
+        x2 = x1 + 50
+        y2 = y1 + 30
+        radius = 5
+        # body
+        self.canvas.create_rectangle(x1 + radius, y1, x2 - radius, y2, fill=color)
+        self.canvas.create_rectangle(x1, y1 + radius, x2, y2 - radius, fill=color)
+
+        # lights
+        self.canvas.create_arc(x1, y1, x1 + 2 * radius, y1 + 2 * radius, start=90, extent=90, style=tk.PIESLICE, fill='red')
+        self.canvas.create_arc(x2 - 2 * radius, y1, x2, y1 + 2 * radius, start=0, extent=90, style=tk.PIESLICE, fill='white')
+        self.canvas.create_arc(x1, y2 - 2 * radius, x1 + 2 * radius, y2, start=180, extent=90, style=tk.PIESLICE, fill='red')
+        self.canvas.create_arc(x2 - 2 * radius, y2 - 2 * radius, x2, y2, start=270, extent=90, style=tk.PIESLICE, fill='white')
+
+        # windows
+        self.canvas.create_rectangle(x1 + 13, y1 + 2, x1 + 37, y1 + 3, fill='black')
+        self.canvas.create_rectangle(x1 + 13, y2 - 2, x1 + 37, y2 - 3, fill='black')
+        self.canvas.create_rectangle(x1 + 30, y1 + 6, x1 + 40, y1 + 24, fill='black')
+        self.canvas.create_rectangle(x1 + 20, y1 + 7, x1 + 27, y1 + 23, fill='gray')
+        self.canvas.create_rectangle(x1 + 7, y1 + 6, x1 + 12, y1 + 24, fill='black')
+
+    def drawCarXLeft(self, x1, y1, color):
+        x2 = x1 + 50
+        y2 = y1 + 30
+        radius = 5
+        # body
+        self.canvas.create_rectangle(x1 + radius, y1, x2 - radius, y2, fill=color)
+        self.canvas.create_rectangle(x1, y1 + radius, x2, y2 - radius, fill=color)
+
+        # lights
+        self.canvas.create_arc(x1, y1, x1 + 2 * radius, y1 + 2 * radius, start=90, extent=90, style=tk.PIESLICE, fill='white')
+        self.canvas.create_arc(x2 - 2 * radius, y1, x2, y1 + 2 * radius, start=0, extent=90, style=tk.PIESLICE, fill='red')
+        self.canvas.create_arc(x1, y2 - 2 * radius, x1 + 2 * radius, y2, start=180, extent=90, style=tk.PIESLICE, fill='white')
+        self.canvas.create_arc(x2 - 2 * radius, y2 - 2 * radius, x2, y2, start=270, extent=90, style=tk.PIESLICE, fill='red')
+
+        # windows
+        self.canvas.create_rectangle(x2 - 13, y1 + 2, x2 - 37, y1 + 3, fill='black')
+        self.canvas.create_rectangle(x2 - 13, y2 - 2, x2 - 37, y2 - 3, fill='black')
+        self.canvas.create_rectangle(x2 - 30, y1 + 6, x2 - 40, y1 + 24, fill='black')
+        self.canvas.create_rectangle(x2 - 20, y1 + 7, x2 - 27, y1 + 23, fill='gray')
+        self.canvas.create_rectangle(x2 - 7, y1 + 6, x2 - 12, y1 + 24, fill='black')
+
+    def drawCarYDown(self, x1, y1, color):
+        x2 = x1 + 30
+        y2 = y1 + 50
+        radius = 5
+        # body
+        self.canvas.create_rectangle(x1 + radius, y1, x2 - radius, y2, fill=color)
+        self.canvas.create_rectangle(x1, y1 + radius, x2, y2 - radius, fill=color)
+
+        # lights
+        self.canvas.create_arc(x1, y1, x1 + 2 * radius, y1 + 2 * radius, start=90, extent=90, style=tk.PIESLICE, fill='red')
+        self.canvas.create_arc(x2 - 2 * radius, y1, x2, y1 + 2 * radius, start=0, extent=90, style=tk.PIESLICE, fill='red')
+        self.canvas.create_arc(x1, y2 - 2 * radius, x1 + 2 * radius, y2, start=180, extent=90, style=tk.PIESLICE, fill='white')
+        self.canvas.create_arc(x2 - 2 * radius, y2 - 2 * radius, x2, y2, start=270, extent=90, style=tk.PIESLICE, fill='white')
+
+        # windows
+        self.canvas.create_rectangle(x1 + 2, y1 + 13, x1 + 3, y1 + 37, fill='black')
+        self.canvas.create_rectangle(x2 - 2, y1 + 13, x2 - 3, y1 + 37, fill='black')
+        self.canvas.create_rectangle(x1 + 6, y1 + 30, x1 + 24, y1 + 40, fill='black')
+        self.canvas.create_rectangle(x1 + 7, y1 + 20, x1 + 23, y1 + 27, fill='gray')
+        self.canvas.create_rectangle(x1 + 6, y1 + 7, x1 + 24, y1 + 12, fill='black')
+
+    def drawCarYUp(self, x1, y1, color):
+        x2 = x1 + 30
+        y2 = y1 + 50
+        radius = 5
+        # body
+        self.canvas.create_rectangle(x1 + radius, y1, x2 - radius, y2, fill=color)
+        self.canvas.create_rectangle(x1, y1 + radius, x2, y2 - radius, fill=color)
+
+        # lights
+        self.canvas.create_arc(x1, y1, x1 + 2 * radius, y1 + 2 * radius, start=90, extent=90, style=tk.PIESLICE, fill='white')
+        self.canvas.create_arc(x2 - 2 * radius, y1, x2, y1 + 2 * radius, start=0, extent=90, style=tk.PIESLICE, fill='white')
+        self.canvas.create_arc(x1, y2 - 2 * radius, x1 + 2 * radius, y2, start=180, extent=90, style=tk.PIESLICE, fill='red')
+        self.canvas.create_arc(x2 - 2 * radius, y2 - 2 * radius, x2, y2, start=270, extent=90, style=tk.PIESLICE, fill='red')
+
+        # windows
+        self.canvas.create_rectangle(x1 + 2, y1 + 13, x1 + 3, y1 + 37, fill='black')
+        self.canvas.create_rectangle(x2 - 2, y1 + 13, x2 - 3, y1 + 37, fill='black')
+        self.canvas.create_rectangle(x1 + 6, y2 - 30, x1 + 24, y2 - 40, fill='black')
+        self.canvas.create_rectangle(x1 + 7, y2 - 20, x1 + 23, y2 - 27, fill='gray')
+        self.canvas.create_rectangle(x1 + 6, y2 - 7, x1 + 24, y2 - 12, fill='black')
+
+    def drawPedestrian(self, x1, y1, dir):
+        radius = 5
+        if dir == 0:
+            x2 = x1 + 10
+            y2 = y1 + 24
+        else:
+            x2 = x1 + 24
+            y2 = y1 + 10
+        # body
+        self.canvas.create_rectangle(x1 + radius, y1, x2 - radius, y2, fill='black')
+        self.canvas.create_rectangle(x1, y1 + radius, x2, y2 - radius, fill='black')
+        self.canvas.create_arc(x1, y1, x1 + 2 * radius, y1 + 2 * radius, start=90, extent=90, style=tk.PIESLICE, fill='black')
+        self.canvas.create_arc(x2 - 2 * radius, y1, x2, y1 + 2 * radius, start=0, extent=90, style=tk.PIESLICE, fill='black')
+        self.canvas.create_arc(x1, y2 - 2 * radius, x1 + 2 * radius, y2, start=180, extent=90, style=tk.PIESLICE, fill='black')
+        self.canvas.create_arc(x2 - 2 * radius, y2 - 2 * radius, x2, y2, start=270, extent=90, style=tk.PIESLICE, fill='black')
+        if dir == 0:
+            self.canvas.create_oval(x1 - 1, y1 + 6, x2 + 1, y1 + 18, fill='gray')
+        else:
+            self.canvas.create_oval(x1 + 6, y1 - 1, x1 + 18, y2 + 1, fill='gray')
+        
+        
 
 
 if __name__ == "__main__":
     app = TrafficSimulation()
     app.mainloop()
+
+
+
+"""
+import tkinter as tk
+
+class TrafficSimulation(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.title("Traffic Simulation")
+        self.geometry("800x600")
+
+        # Create a canvas to draw the roads and cars
+        self.canvas = tk.Canvas(self, width=800, height=600, bg="white")
+        self.canvas.pack()
+
+        # Draw roads
+        self.draw_road(50, 200, 750, 200)
+        self.draw_road(750, 200, 750, 400)
+        self.draw_road(750, 400, 50, 400)
+        self.draw_road(50, 400, 50, 200)
+
+        # Draw traffic lights
+        self.draw_traffic_light(400, 200)
+        self.draw_traffic_light(400, 400)
+
+        # Initialize car
+        self.car = self.draw_car(100, 300)
+
+        # Schedule car movement
+        self.move_car()
+
+    def draw_road(self, x1, y1, x2, y2):
+        self.canvas.create_line(x1, y1, x2, y2, fill="black", width=5)
+
+    def draw_traffic_light(self, x, y):
+        self.canvas.create_rectangle(x - 10, y - 20, x + 10, y + 20, fill="black")
+        self.red_light = self.canvas.create_oval(x - 5, y - 15, x + 5, y - 5, fill="red")
+        self.green_light = self.canvas.create_oval(x - 5, y + 5, x + 5, y + 15, fill="green")
+
+    def draw_car(self, x, y):
+        # Draw multiple rectangles to represent the car
+        car_body = self.canvas.create_rectangle(x, y, x + 40, y + 20, fill="blue")
+        car_window = self.canvas.create_rectangle(x + 5, y + 5, x + 15, y + 15, fill="white")
+        car_wheel1 = self.canvas.create_oval(x + 5, y + 18, x + 15, y + 28, fill="black")
+        car_wheel2 = self.canvas.create_oval(x + 25, y + 18, x + 35, y + 28, fill="black")
+        
+        # Return a tuple containing all parts of the car
+        return car_body, car_window, car_wheel1, car_wheel2
+
+    def move_car(self):
+        # Check the state of the traffic light
+        traffic_light_state = self.canvas.itemcget(self.red_light, "fill")
+
+        if traffic_light_state == "green":
+            # Move the entire car forward
+            self.canvas.move(self.car[0], 5, 0)  # Move the car body
+            self.canvas.move(self.car[1], 5, 0)  # Move the car window
+            self.canvas.move(self.car[2], 5, 0)  # Move wheel 1
+            self.canvas.move(self.car[3], 5, 0)  # Move wheel 2
+
+        # Schedule the next movement
+        self.after(100, self.move_car)
+
+if __name__ == "__main__":
+    app = TrafficSimulation()
+    app.mainloop()
+"""
