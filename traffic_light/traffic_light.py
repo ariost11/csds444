@@ -8,7 +8,7 @@ class TrafficSimulation(tk.Tk):
         self.title("Traffic Simulation")
         self.geometry("1540x730") 
         self.canvas = tk.Canvas(self, width=1550, height=740, bd=0, highlightthickness=0)
-        self.image = tk.PhotoImage(file='background.png')
+        self.image = tk.PhotoImage(file='/Users/omar/Library/Mobile Documents/com~apple~CloudDocs/Classes/spring24/CSDS444/csds444/traffic_light/background.png')  # Update path as needed
         self.image_id = self.canvas.create_image(770,360, image=self.image)
         self.canvas.pack()
 
@@ -24,17 +24,19 @@ class TrafficSimulation(tk.Tk):
         self.crossWalkEven = []
         self.crossWalkOdd = []
 
+        self.cars = []
+        self.pedestrians = []
+
         self.drawTrafficLights()
 
-        self.drawCarXRight(250, 380, 'blue')
-        self.drawCarXLeft(300, 310, 'yellow')
-        self.drawCarYDown(722, 600, 'orange')
-        self.drawCarYUp(790, 70, 'purple')
+        self.cars.append(self.drawCarXRight(250, 380, 'blue'))
+        self.cars.append(self.drawCarXLeft(300, 310, 'yellow'))
+        self.cars.append(self.drawCarYDown(722, 600, 'orange'))
+        self.cars.append(self.drawCarYUp(790, 70, 'purple'))
 
-        # 0 is for sideways, 1 is for up
-        self.drawPedestrian(300, 180, 0)
-        self.drawPedestrian(600, 600, 1)
-        
+        self.pedestrians.append(self.drawPedestrian(300, 180, 0))
+        self.pedestrians.append(self.drawPedestrian(600, 600, 1))
+
         self.after(self.greenRedTime, self.update_traffic_lights1)
 
     
@@ -87,6 +89,10 @@ class TrafficSimulation(tk.Tk):
             self.canvas.itemconfigure(yellowLight, fill='yellow')
             self.canvas.itemconfigure(greenLight, fill='gray')
         
+        self.after(self.greenRedTime, self.update_traffic_lights2)
+
+        self.move_cars('EW')  # East-West cars can move
+        self.move_pedestrians('NS')  # North-South pedestrians can move
         self.after(self.greenRedTime, self.update_traffic_lights2)
 
     def update_traffic_lights2(self):
@@ -147,6 +153,25 @@ class TrafficSimulation(tk.Tk):
         self.canvas.create_arc(x2 - 2 * radius, y1, x2, y1 + 2 * radius, start=0, extent=90, style=tk.PIESLICE, fill='black')
         self.canvas.create_arc(x1, y2 - 2 * radius, x1 + 2 * radius, y2, start=180, extent=90, style=tk.PIESLICE, fill='black')
         self.canvas.create_arc(x2 - 2 * radius, y2 - 2 * radius, x2, y2, start=270, extent=90, style=tk.PIESLICE, fill='black')
+
+    def move_cars(self, direction):
+        # Logic to move cars based on direction
+        speed = 5  # Adjust speed as needed
+        for car in self.cars:
+            if direction == 'EW':
+                self.canvas.move(car, speed, 0)  # Move East-West cars
+            elif direction == 'NS':
+                self.canvas.move(car, 0, speed)  # Move North-South cars
+
+    def move_pedestrians(self, direction):
+        # Logic to move pedestrians based on direction
+        speed = 3  # Adjust speed as needed
+        for pedestrian in self.pedestrians:
+            if direction == 'EW':
+                self.canvas.move(pedestrian, speed, 0)  # Move East-West pedestrians
+            elif direction == 'NS':
+                self.canvas.move(pedestrian, 0, speed)  # Move North-South pedestrians
+
 
     def drawCarXRight(self, x1, y1, color):
         x2 = x1 + 50
