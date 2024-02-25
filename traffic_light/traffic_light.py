@@ -21,10 +21,24 @@ class TrafficSimulation(tk.Tk):
         self.redEven = []
         self.yellowEven = []
         self.greenEven = []
-
         self.crossWalkEven = []
         self.crossWalkOdd = []
 
+        self.drawTrafficLights()
+
+        self.drawCarXRight(250, 380, 'blue')
+        self.drawCarXLeft(300, 310, 'yellow')
+        self.drawCarYDown(722, 600, 'orange')
+        self.drawCarYUp(790, 70, 'purple')
+
+        # 0 is for sideways, 1 is for up
+        self.drawPedestrian(300, 180, 0)
+        self.drawPedestrian(600, 600, 1)
+        
+        self.after(self.greenRedTime, self.update_traffic_lights1)
+
+    
+    def drawTrafficLights(self):
         x = 550
         y = 200
         self.crossWalkOdd.append(self.canvas.create_rectangle(x, y, x+20, y+20, fill='red'))
@@ -66,18 +80,7 @@ class TrafficSimulation(tk.Tk):
         self.redEven.append(self.canvas.create_oval(x+46, y+3, x+66, y+22, fill='red'))
         self.yellowEven.append(self.canvas.create_oval(x+25, y+3, x+45, y+22, fill='gray'))
         self.greenEven.append(self.canvas.create_oval(x+4, y+3, x+24, y+22, fill='gray'))
-
-
-        self.drawCarXRight(250, 380, 'blue')
-        self.drawCarXLeft(300, 310, 'yellow')
-        self.drawCarYDown(722, 600, 'orange')
-        self.drawCarYUp(790, 70, 'purple')
-
-        # 0 is for sideways, 1 is for up
-        self.drawPedestrian(300, 180, 0)
-        self.drawPedestrian(600, 600, 1)
-        
-        self.after(self.greenRedTime, self.update_traffic_lights1)
+    
 
     def update_traffic_lights1(self):
         for yellowLight, greenLight in zip(self.yellowOdd, self.greenOdd):
