@@ -8,7 +8,7 @@ class TrafficSimulation(tk.Tk):
         self.title("Traffic Simulation")
         self.geometry("1540x730") 
         self.canvas = tk.Canvas(self, width=1550, height=740, bd=0, highlightthickness=0)
-        self.image = tk.PhotoImage(file='/Users/omar/Library/Mobile Documents/com~apple~CloudDocs/Classes/spring24/CSDS444/csds444/traffic_light/background.png')  # Update path as needed
+        self.image = tk.PhotoImage(file='background.png')  # Update path as needed
         self.image_id = self.canvas.create_image(770,360, image=self.image)
         self.canvas.pack()
 
@@ -24,18 +24,31 @@ class TrafficSimulation(tk.Tk):
         self.crossWalkEven = []
         self.crossWalkOdd = []
 
-        self.cars = []
-        self.pedestrians = []
-
         self.drawTrafficLights()
 
-        self.cars.append(self.drawCarXRight(250, 380, 'blue'))
-        self.cars.append(self.drawCarXLeft(300, 310, 'yellow'))
-        self.cars.append(self.drawCarYDown(722, 600, 'orange'))
-        self.cars.append(self.drawCarYUp(790, 70, 'purple'))
+        self.drawCarXRight(250, 380, 'blue')
+        self.drawCarXRight(800, 380, 'yellow')
+        self.drawCarXRight(1300, 380, 'green')
+        self.drawCarXRight(400, 440, 'orange')
+        self.drawCarXLeft(300, 310, 'cyan')
+        self.drawCarXLeft(1200, 250, 'magenta')
+        self.drawCarXLeft(650, 310, 'lime')
+        self.drawCarYDown(722, 60, 'silver')
+        self.drawCarYDown(662, 60, 'brown')
+        self.drawCarYUp(790, 620, 'purple')
 
-        self.pedestrians.append(self.drawPedestrian(300, 180, 0))
-        self.pedestrians.append(self.drawPedestrian(600, 600, 1))
+        self.drawPedestrian(300, 180, 0)
+        self.drawPedestrian(340, 200, 0)
+        self.drawPedestrian(650, 190, 0)
+        self.drawPedestrian(1300, 175, 0)
+        self.drawPedestrian(250, 510, 0)
+        self.drawPedestrian(750, 520, 0)
+        self.drawPedestrian(1150, 525, 0)
+        self.drawPedestrian(1130, 510, 0)
+        self.drawPedestrian(600, 600, 1)
+        self.drawPedestrian(590, 120, 1)
+        self.drawPedestrian(930, 520, 1)
+        self.drawPedestrian(920, 190, 1)
 
         self.after(self.greenRedTime, self.update_traffic_lights1)
 
@@ -89,10 +102,6 @@ class TrafficSimulation(tk.Tk):
             self.canvas.itemconfigure(yellowLight, fill='yellow')
             self.canvas.itemconfigure(greenLight, fill='gray')
         
-        self.after(self.greenRedTime, self.update_traffic_lights2)
-
-        self.move_cars('EW')  # East-West cars can move
-        self.move_pedestrians('NS')  # North-South pedestrians can move
         self.after(self.greenRedTime, self.update_traffic_lights2)
 
     def update_traffic_lights2(self):
@@ -153,25 +162,6 @@ class TrafficSimulation(tk.Tk):
         self.canvas.create_arc(x2 - 2 * radius, y1, x2, y1 + 2 * radius, start=0, extent=90, style=tk.PIESLICE, fill='black')
         self.canvas.create_arc(x1, y2 - 2 * radius, x1 + 2 * radius, y2, start=180, extent=90, style=tk.PIESLICE, fill='black')
         self.canvas.create_arc(x2 - 2 * radius, y2 - 2 * radius, x2, y2, start=270, extent=90, style=tk.PIESLICE, fill='black')
-
-    def move_cars(self, direction):
-        # Logic to move cars based on direction
-        speed = 5  # Adjust speed as needed
-        for car in self.cars:
-            if direction == 'EW':
-                self.canvas.move(car, speed, 0)  # Move East-West cars
-            elif direction == 'NS':
-                self.canvas.move(car, 0, speed)  # Move North-South cars
-
-    def move_pedestrians(self, direction):
-        # Logic to move pedestrians based on direction
-        speed = 3  # Adjust speed as needed
-        for pedestrian in self.pedestrians:
-            if direction == 'EW':
-                self.canvas.move(pedestrian, speed, 0)  # Move East-West pedestrians
-            elif direction == 'NS':
-                self.canvas.move(pedestrian, 0, speed)  # Move North-South pedestrians
-
 
     def drawCarXRight(self, x1, y1, color):
         x2 = x1 + 50
@@ -284,70 +274,3 @@ if __name__ == "__main__":
     app = TrafficSimulation()
     app.mainloop()
 
-
-
-"""
-import tkinter as tk
-
-class TrafficSimulation(tk.Tk):
-    def __init__(self):
-        super().__init__()
-        self.title("Traffic Simulation")
-        self.geometry("800x600")
-
-        # Create a canvas to draw the roads and cars
-        self.canvas = tk.Canvas(self, width=800, height=600, bg="white")
-        self.canvas.pack()
-
-        # Draw roads
-        self.draw_road(50, 200, 750, 200)
-        self.draw_road(750, 200, 750, 400)
-        self.draw_road(750, 400, 50, 400)
-        self.draw_road(50, 400, 50, 200)
-
-        # Draw traffic lights
-        self.draw_traffic_light(400, 200)
-        self.draw_traffic_light(400, 400)
-
-        # Initialize car
-        self.car = self.draw_car(100, 300)
-
-        # Schedule car movement
-        self.move_car()
-
-    def draw_road(self, x1, y1, x2, y2):
-        self.canvas.create_line(x1, y1, x2, y2, fill="black", width=5)
-
-    def draw_traffic_light(self, x, y):
-        self.canvas.create_rectangle(x - 10, y - 20, x + 10, y + 20, fill="black")
-        self.red_light = self.canvas.create_oval(x - 5, y - 15, x + 5, y - 5, fill="red")
-        self.green_light = self.canvas.create_oval(x - 5, y + 5, x + 5, y + 15, fill="green")
-
-    def draw_car(self, x, y):
-        # Draw multiple rectangles to represent the car
-        car_body = self.canvas.create_rectangle(x, y, x + 40, y + 20, fill="blue")
-        car_window = self.canvas.create_rectangle(x + 5, y + 5, x + 15, y + 15, fill="white")
-        car_wheel1 = self.canvas.create_oval(x + 5, y + 18, x + 15, y + 28, fill="black")
-        car_wheel2 = self.canvas.create_oval(x + 25, y + 18, x + 35, y + 28, fill="black")
-        
-        # Return a tuple containing all parts of the car
-        return car_body, car_window, car_wheel1, car_wheel2
-
-    def move_car(self):
-        # Check the state of the traffic light
-        traffic_light_state = self.canvas.itemcget(self.red_light, "fill")
-
-        if traffic_light_state == "green":
-            # Move the entire car forward
-            self.canvas.move(self.car[0], 5, 0)  # Move the car body
-            self.canvas.move(self.car[1], 5, 0)  # Move the car window
-            self.canvas.move(self.car[2], 5, 0)  # Move wheel 1
-            self.canvas.move(self.car[3], 5, 0)  # Move wheel 2
-
-        # Schedule the next movement
-        self.after(100, self.move_car)
-
-if __name__ == "__main__":
-    app = TrafficSimulation()
-    app.mainloop()
-"""
