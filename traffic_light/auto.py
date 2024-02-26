@@ -12,8 +12,8 @@ class TrafficSimulation(tk.Tk):
         self.image_id = self.canvas.create_image(770,360, image=self.image)
         self.canvas.pack()
 
-        self.greenRedTime = 10000
-        self.yellowTime = 2000
+        self.greenRedTime = 5000
+        self.yellowTime = 1000
 
         self.redOdd = []
         self.yellowOdd = []
@@ -72,7 +72,7 @@ class TrafficSimulation(tk.Tk):
 
             ped = self.drawPedestrian(600, 600, 1)
             self.pedestrianDown.append(ped)
-            self.after(32000, self.make_cars)
+            self.after(33000, self.make_cars)
 
     def drawTrafficLights(self):
         x = 550
@@ -212,7 +212,18 @@ class TrafficSimulation(tk.Tk):
         for crossWalk in self.crossWalkEven:
             self.canvas.itemconfigure(crossWalk, fill='green')
         
-        self.after(self.greenRedTime, self.update_traffic_lights_for_left_turn_NS)
+        self.after(self.greenRedTime, self.update_traffic_lights7)
+
+    def update_traffic_lights7(self):
+        for redLight, greenLight in zip(self.redOdd, self.greenOdd):
+            self.canvas.itemconfigure(redLight, fill='gray')
+            self.canvas.itemconfigure(greenLight, fill='gray')
+            for yellowLight in self.yellowOdd:
+                self.canvas.itemconfigure(yellowLight, fill='yellow')
+
+        
+        self.after(self.yellowTime, self.update_traffic_lights_for_left_turn_NS)
+
 
 
     def trafficLightBG(self, x1, y1, x2, y2):
