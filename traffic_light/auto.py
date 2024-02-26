@@ -12,8 +12,8 @@ class TrafficSimulation(tk.Tk):
         self.image_id = self.canvas.create_image(770,360, image=self.image)
         self.canvas.pack()
 
-        self.greenRedTime = 5000
-        self.yellowTime = 1000
+        self.greenRedTime = 10000
+        self.yellowTime = 2000
 
         self.redOdd = []
         self.yellowOdd = []
