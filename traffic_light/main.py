@@ -67,7 +67,7 @@ class TrafficSimulation(tk.Tk):
     
     def addCar(self):
         newCar = random.random()
-        if newCar < 0.4:
+        if newCar < 0.2:
             colors = ["green", "blue", "yellow", "orange", "purple", "pink", "cyan", "magenta", "brown", "turquoise", "gold", "silver", "navy", "olive", "maroon", "lime", "teal", "indigo"]
             color = random.choice(colors)
             vertOrHorz = random.random()
@@ -153,18 +153,41 @@ class TrafficSimulation(tk.Tk):
                 #for item in self.carXR[removeList[i]*11-i*11:removeList[i]*11 + 11-i*11]:
                     #self.canvas.delete(item)
         elif self.canvas.itemcget(self.redOdd[1], "fill") == 'blue':
-            for i in range(0,int(len(self.carXR)/11)):
-                if self.canvas.coords(self.carXR[2 + i*11])[0] == 1020:
+            for i in range(0,int(len(self.carXL)/11)):
+                if self.canvas.coords(self.carXL[2 + i*11])[0] == 1020:
                     for j in range(0,11):
-                        self.canvas.move(self.carXR[i*11 + j], 10, 0)
-            #removeList = []
-            for i in range(0,int(len(self.carXR)/11)):
-                if self.canvas.coords(self.carXR[2 + i*11])[0] == 850 and self.canvas.coords(self.carXR[2 + i*11])[1] == 250:
-                    color = self.canvas.itemcget(self.carXR[i*11], "fill")
+                        self.canvas.move(self.carXL[i*11 + j], -10, 0)
+            for i in range(0,int(len(self.carXL)/11)):
+                if self.canvas.coords(self.carXL[2 + i*11])[0] == 850 and self.canvas.coords(self.carXL[2 + i*11])[1] == 250:
+                    color = self.canvas.itemcget(self.carXL[i*11], "fill")
                     self.carYU.extend(self.drawCarYUp(850, 250, color))
-                if self.canvas.coords(self.carXR[2 + i*11])[0] == 720 and self.canvas.coords(self.carXR[2 + i*11])[1] == 310:
-                    color = self.canvas.itemcget(self.carXR[i*11], "fill")
+                if self.canvas.coords(self.carXL[2 + i*11])[0] == 720 and self.canvas.coords(self.carXL[2 + i*11])[1] == 310:
+                    color = self.canvas.itemcget(self.carXL[i*11], "fill")
                     self.carYD.extend(self.drawCarYDown(720, 310, color))
+        elif self.canvas.itemcget(self.redEven[0], "fill") == 'blue':
+            for i in range(0,int(len(self.carYD)/11)):
+                if self.canvas.coords(self.carYD[2 + i*11])[1] == 60:
+                    for j in range(0,11):
+                        self.canvas.move(self.carYD[i*11 + j], 0, 10)
+            for i in range(0,int(len(self.carYD)/11)):
+                if self.canvas.coords(self.carYD[2 + i*11])[1] == 380 and self.canvas.coords(self.carYD[2 + i*11])[0] == 720:
+                    color = self.canvas.itemcget(self.carYD[i*11], "fill")
+                    self.carXR.extend(self.drawCarXRight(720, 380, color))
+                if self.canvas.coords(self.carYD[2 + i*11])[1] == 250 and self.canvas.coords(self.carYD[2 + i*11])[0] == 660:
+                    color = self.canvas.itemcget(self.carYD[i*11], "fill")
+                    self.carXL.extend(self.drawCarXLeft(660, 250, color))
+        elif self.canvas.itemcget(self.redEven[1], "fill") == 'blue':
+            for i in range(0,int(len(self.carYU)/11)):
+                if self.canvas.coords(self.carYU[2 + i*11])[1] == 620:
+                    for j in range(0,11):
+                        self.canvas.move(self.carYU[i*11 + j], 0, -10)
+            for i in range(0,int(len(self.carYU)/11)):
+                if self.canvas.coords(self.carYU[2 + i*11])[1] == 440 and self.canvas.coords(self.carYU[2 + i*11])[0] == 850:
+                    color = self.canvas.itemcget(self.carYU[i*11], "fill")
+                    self.carXR.extend(self.drawCarXRight(850, 440, color))
+                if self.canvas.coords(self.carYU[2 + i*11])[1] == 310 and self.canvas.coords(self.carYU[2 + i*11])[0] == 790:
+                    color = self.canvas.itemcget(self.carYU[i*11], "fill")
+                    self.carXL.extend(self.drawCarXLeft(790, 310, color))
         self.after(10, self.moveCar)
 
     def addPedestrian(self):
