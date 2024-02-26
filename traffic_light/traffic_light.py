@@ -8,7 +8,7 @@ class TrafficSimulation(tk.Tk):
         self.title("Traffic Simulation")
         self.geometry("1540x730") 
         self.canvas = tk.Canvas(self, width=1550, height=740, bd=0, highlightthickness=0)
-        self.image = tk.PhotoImage(file='background.png')  # Update path as needed
+        self.image = tk.PhotoImage(file='traffic_light/background.png')  # Update path as needed
         self.image_id = self.canvas.create_image(770,360, image=self.image)
         self.canvas.pack()
 
