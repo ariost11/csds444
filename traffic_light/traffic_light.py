@@ -8,12 +8,13 @@ class TrafficSimulation(tk.Tk):
         self.title("Traffic Simulation")
         self.geometry("1540x730") 
         self.canvas = tk.Canvas(self, width=1550, height=740, bd=0, highlightthickness=0)
-        self.image = tk.PhotoImage(file='traffic_light/background.png')  # Update path as needed
+        self.image = tk.PhotoImage(file='background.png')  # Update path as needed
         self.image_id = self.canvas.create_image(770,360, image=self.image)
         self.canvas.pack()
 
         self.greenRedTime = 9000
         self.yellowTime = 5000
+        self.blueTime = 10000
 
         self.redOdd = []
         self.yellowOdd = []
@@ -41,8 +42,8 @@ class TrafficSimulation(tk.Tk):
         self.carXL.extend(self.drawCarXLeft(300, 310, 'cyan'))
         self.carXL.extend(self.drawCarXLeft(1400, 250, 'magenta'))
         self.carXL.extend(self.drawCarXLeft(650, 310, 'lime'))
-        self.carYD.extend(self.drawCarYDown(722, 60, 'silver'))
-        self.carYD.extend(self.drawCarYDown(662, 60, 'brown'))
+        self.carYD.extend(self.drawCarYDown(720, 60, 'silver'))
+        self.carYD.extend(self.drawCarYDown(660, 60, 'brown'))
         self.carYU.extend(self.drawCarYUp(790, 620, 'purple'))
 
         self.pedXR.extend(self.drawPedestrian(300, 180, 0))
@@ -66,7 +67,7 @@ class TrafficSimulation(tk.Tk):
     
     def addCar(self):
         newCar = random.random()
-        if newCar < 0.1:
+        if newCar < 0.4:
             colors = ["green", "blue", "yellow", "orange", "purple", "pink", "cyan", "magenta", "brown", "turquoise", "gold", "silver", "navy", "olive", "maroon", "lime", "teal", "indigo"]
             color = random.choice(colors)
             vertOrHorz = random.random()
@@ -81,9 +82,9 @@ class TrafficSimulation(tk.Tk):
                 else:
                     lanes = random.random()
                     if lanes < 0.5:
-                        self.carYD.extend(self.drawCarYDown(722, -100, color))
+                        self.carYD.extend(self.drawCarYDown(720, -100, color))
                     else:
-                        self.carYD.extend(self.drawCarYDown(662, -100, color))
+                        self.carYD.extend(self.drawCarYDown(660, -100, color))
             else:
                 leftOrRight = random.random()
                 if leftOrRight < 0.5:
@@ -131,6 +132,39 @@ class TrafficSimulation(tk.Tk):
                     for j in range(0,11):
                         self.canvas.move(self.carYD[i*11 + j], 0, 10)
 
+        # turns
+                        
+        if self.canvas.itemcget(self.redOdd[0], "fill") == 'blue':
+            for i in range(0,int(len(self.carXR)/11)):
+                if self.canvas.coords(self.carXR[2 + i*11])[0] == 470:
+                    for j in range(0,11):
+                        self.canvas.move(self.carXR[i*11 + j], 10, 0)
+            #removeList = []
+            for i in range(0,int(len(self.carXR)/11)):
+                if self.canvas.coords(self.carXR[2 + i*11])[0] == 790 and self.canvas.coords(self.carXR[2 + i*11])[1] == 380:
+                    color = self.canvas.itemcget(self.carXR[i*11], "fill")
+                    self.carYU.extend(self.drawCarYUp(790, 380, color))
+                if self.canvas.coords(self.carXR[2 + i*11])[0] == 660 and self.canvas.coords(self.carXR[2 + i*11])[1] == 440:
+                    color = self.canvas.itemcget(self.carXR[i*11], "fill")
+                    self.carYD.extend(self.drawCarYDown(660, 440, color))
+                    #removeList.append(i)
+            #for i in range(0,len(removeList)):
+                #self.carXR = self.carXR[:removeList[i]*11] + self.carXR[removeList[i]*11 + 11:]
+                #for item in self.carXR[removeList[i]*11-i*11:removeList[i]*11 + 11-i*11]:
+                    #self.canvas.delete(item)
+        elif self.canvas.itemcget(self.redOdd[1], "fill") == 'blue':
+            for i in range(0,int(len(self.carXR)/11)):
+                if self.canvas.coords(self.carXR[2 + i*11])[0] == 1020:
+                    for j in range(0,11):
+                        self.canvas.move(self.carXR[i*11 + j], 10, 0)
+            #removeList = []
+            for i in range(0,int(len(self.carXR)/11)):
+                if self.canvas.coords(self.carXR[2 + i*11])[0] == 850 and self.canvas.coords(self.carXR[2 + i*11])[1] == 250:
+                    color = self.canvas.itemcget(self.carXR[i*11], "fill")
+                    self.carYU.extend(self.drawCarYUp(850, 250, color))
+                if self.canvas.coords(self.carXR[2 + i*11])[0] == 720 and self.canvas.coords(self.carXR[2 + i*11])[1] == 310:
+                    color = self.canvas.itemcget(self.carXR[i*11], "fill")
+                    self.carYD.extend(self.drawCarYDown(720, 310, color))
         self.after(10, self.moveCar)
 
     def addPedestrian(self):
@@ -291,6 +325,62 @@ class TrafficSimulation(tk.Tk):
         self.after(self.yellowTime, self.update_traffic_lights6)
 
     def update_traffic_lights6(self):
+        self.canvas.itemconfigure(self.redOdd[0], fill='blue')
+        self.canvas.itemconfigure(self.yellowOdd[0], fill='blue')
+        self.canvas.itemconfigure(self.greenOdd[0], fill='blue')
+        
+        self.after(self.blueTime, self.update_traffic_lights7)
+
+    def update_traffic_lights7(self):
+        self.canvas.itemconfigure(self.redOdd[0], fill='red')
+        self.canvas.itemconfigure(self.yellowOdd[0], fill='gray')
+        self.canvas.itemconfigure(self.greenOdd[0], fill='gray')
+        
+        self.after(self.yellowTime, self.update_traffic_lights8)
+
+    def update_traffic_lights8(self):
+        self.canvas.itemconfigure(self.redEven[1], fill='blue')
+        self.canvas.itemconfigure(self.yellowEven[1], fill='blue')
+        self.canvas.itemconfigure(self.greenEven[1], fill='blue')
+        
+        self.after(self.blueTime, self.update_traffic_lights9)
+
+    def update_traffic_lights9(self):
+        self.canvas.itemconfigure(self.redEven[1], fill='red')
+        self.canvas.itemconfigure(self.yellowEven[1], fill='gray')
+        self.canvas.itemconfigure(self.greenEven[1], fill='gray')
+        
+        self.after(self.yellowTime, self.update_traffic_lights10)
+
+    def update_traffic_lights10(self):
+        self.canvas.itemconfigure(self.redOdd[1], fill='blue')
+        self.canvas.itemconfigure(self.yellowOdd[1], fill='blue')
+        self.canvas.itemconfigure(self.greenOdd[1], fill='blue')
+        
+        self.after(self.blueTime, self.update_traffic_lights11)
+
+    def update_traffic_lights11(self):
+        self.canvas.itemconfigure(self.redOdd[1], fill='red')
+        self.canvas.itemconfigure(self.yellowOdd[1], fill='gray')
+        self.canvas.itemconfigure(self.greenOdd[1], fill='gray')
+        
+        self.after(self.blueTime, self.update_traffic_lights12)
+    
+    def update_traffic_lights12(self):
+        self.canvas.itemconfigure(self.redEven[0], fill='blue')
+        self.canvas.itemconfigure(self.yellowEven[0], fill='blue')
+        self.canvas.itemconfigure(self.greenEven[0], fill='blue')
+        
+        self.after(self.blueTime, self.update_traffic_lights13)
+
+    def update_traffic_lights13(self):
+        self.canvas.itemconfigure(self.redEven[0], fill='red')
+        self.canvas.itemconfigure(self.yellowEven[0], fill='gray')
+        self.canvas.itemconfigure(self.greenEven[0], fill='gray')
+        
+        self.after(self.blueTime, self.update_traffic_lights14)
+
+    def update_traffic_lights14(self):
         for redLight, greenLight in zip(self.redOdd, self.greenOdd):
             self.canvas.itemconfigure(redLight, fill='gray')
             self.canvas.itemconfigure(greenLight, fill='green')
