@@ -55,7 +55,7 @@ class TrafficSimulation(tk.Tk):
         self.pedXL.extend(self.drawPedestrian(1130, 510, 0))
         self.pedYU.extend(self.drawPedestrian(600, 600, 1))
         self.pedYU.extend(self.drawPedestrian(590, 120, 1))
-        #self.pedYD.extend(self.drawPedestrian(930, 520, 1))
+        self.pedYD.extend(self.drawPedestrian(930, 520, 1))
         self.pedYD.extend(self.drawPedestrian(920, 130, 1))
 
         self.moveCar()
